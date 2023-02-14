@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>【ABAP】MM02保存后数据传输至外围系统</title>
+    <url>/2023/02/14/%E3%80%90ABAP%E3%80%91MM02%E4%BF%9D%E5%AD%98%E5%90%8E%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E8%87%B3%E5%A4%96%E5%9B%B4%E7%B3%BB%E7%BB%9F/</url>
+    <content><![CDATA[<p>【问题】MM02更改物料主数据之后，传递最新数据至外围系统。<br>【方案】找到MM02保存后所触发的增强点。<br>【执行】从第一代增强到第四代增强，前三代都没找到合适的增强点，只在第四代增强BTE里面找到一个触发点 00001250</p>
+<span id="more"></span>
+
+<ol>
+<li><p>运行事务码：FIBF，进入维护事务BTE，选择菜单“环境-&gt;信息系统（P&#x2F;S）（I）-&gt;F8 运行程序 </p>
+<p><a href="https://postimg.cc/TLDPzd9d">image-20211020141338334.png</a></p>
+<p><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141530432.png" alt="image-20211020141530432"></p>
+</li>
+<li><p>找到业务交易事件【00001250	物料主数据：过帐】，选中后点击模式函数模块<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141736274.png" alt="image-20211020141736274"></p>
+</li>
+<li><p>跳转到函数构建器，将带出的功能模块复制一份（以Z开头），函数组不需要变动<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020142044048.png" alt="image-20211020142044048"></p>
+</li>
+<li><p>进入功能模块，写入你需要实现功能的代码<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020142327875.png" alt="image-20211020142327875"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  CHECK sy-tcode = &#x27;MM02&#x27;.</span><br><span class="line"></span><br><span class="line">  DATA: lt_mara  TYPE mara OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        lt_marc  TYPE marc OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        ls_makt  TYPE makt,</span><br><span class="line">        lt_makt  TYPE makt OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        ls_marm  TYPE marm,</span><br><span class="line">        lt_marm  TYPE marm OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        lt_zmara TYPE zmara OCCURS 0 WITH HEADER LINE.</span><br><span class="line"></span><br><span class="line">  DATA: ls_msgr  TYPE zsha047_msgout.</span><br><span class="line"></span><br><span class="line">  DATA:lt_material TYPE TABLE OF zmaterial_master,</span><br><span class="line">       ls_material TYPE zmaterial_master.</span><br><span class="line"></span><br><span class="line">  APPEND i_mara_new TO lt_mara.</span><br><span class="line">  APPEND i_marc_new TO lt_marc.</span><br><span class="line"></span><br><span class="line">  MOVE-CORRESPONDING t_makt_new TO ls_makt.</span><br><span class="line">  ls_material-maktx = ls_makt-maktx.</span><br><span class="line">  APPEND ls_makt TO lt_makt.</span><br><span class="line"></span><br><span class="line">  MOVE-CORRESPONDING t_marm_new TO ls_marm.</span><br><span class="line">  APPEND ls_marm TO lt_marm.</span><br><span class="line"></span><br><span class="line">  ls_material-matnr = i_mara_new-matnr.</span><br><span class="line">  ls_material-mtart = i_mara_new-mtart.</span><br><span class="line">  ls_material-matkl = i_mara_new-matkl.</span><br><span class="line">  ls_material-meins = i_mara_new-meins.</span><br><span class="line">  ls_material-lvorm = i_mara_new-lvorm.</span><br><span class="line">  ls_material-werks = i_marc_new-werks.</span><br><span class="line">  ls_material-lvorm = i_mara_new-lvorm.</span><br><span class="line">  APPEND ls_material to lt_material.</span><br><span class="line"></span><br><span class="line">*srm物料主数据接收</span><br><span class="line">  CALL FUNCTION &#x27;ZYHG02_IFX001&#x27;</span><br><span class="line">    EXPORTING</span><br><span class="line">      iv_comit = &#x27;X&#x27;</span><br><span class="line">    IMPORTING</span><br><span class="line">      es_msgr  = ls_msgr</span><br><span class="line">    TABLES</span><br><span class="line">      it_mara  = lt_mara</span><br><span class="line">      it_makt  = lt_makt</span><br><span class="line">      it_marc  = lt_marc</span><br><span class="line">      it_marm  = lt_marm</span><br><span class="line">      it_zmara = lt_zmara.</span><br><span class="line"></span><br><span class="line">*wms物料主数据接收</span><br><span class="line">  IF lt_marc IS NOT INITIAL.</span><br><span class="line">    CALL FUNCTION &#x27;ZYHG03_IFX001&#x27;</span><br><span class="line">      EXPORTING</span><br><span class="line">        iv_comit = &#x27;X&#x27;</span><br><span class="line">      IMPORTING</span><br><span class="line">        es_msgr  = ls_msgr</span><br><span class="line">      TABLES</span><br><span class="line">        it_marc  = lt_marc.</span><br><span class="line">  ENDIF.</span><br><span class="line"></span><br><span class="line">*bsp物料数据接收</span><br><span class="line">  IF lt_material IS NOT INITIAL.</span><br><span class="line">    CALL FUNCTION &#x27;ZYHG05_IFX001&#x27;</span><br><span class="line">      EXPORTING</span><br><span class="line">        iv_comit    = &#x27;X&#x27;</span><br><span class="line">      IMPORTING</span><br><span class="line">        es_msgr     = ls_msgr</span><br><span class="line">      TABLES</span><br><span class="line">        lt_material = lt_material.</span><br><span class="line">  ENDIF.</span><br><span class="line"></span><br><span class="line">  clear:ls_msgr,ls_material,ls_makt,ls_marm.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>代码写完之后，还差最后一步，回到FIBF创建产品，设置——产品——一个客户的<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143012675.png" alt="image-20211020143012675"><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143043530.png" alt="image-20211020143043530"></p>
+</li>
+<li><p>配置产品，事件及函数模块，设置——发布&#x2F;订阅模块——一个客户的<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143249158.png" alt="image-20211020143249158"><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143342819.png" alt="image-20211020143342819"></p>
+</li>
+<li><p>最后测试一下，传递数据是否为最新数据。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>ABAP</category>
+      </categories>
+      <tags>
+        <tag>ABAP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【ABAP】事务码及解释</title>
     <url>/2023/02/14/%E3%80%90ABAP%E3%80%91%E4%BA%8B%E5%8A%A1%E7%A0%81%E5%8F%8A%E8%A7%A3%E9%87%8A-1/</url>
     <content><![CDATA[<table>
@@ -29,36 +62,6 @@
 </tbody></table>
 <span id="more"></span>
 <p>ABAPDOCU ABAP文档和范例<br>BAPI BAPI浏览器<br>CMOD(SMOD) SAP增强<br>LSMW 数据导入工具 数据导入<br>PFCG 权限管理<br>OSS1 连接SAP OSS<br>S001 ABAP开发工作台菜单(含多Tcode)<br>SA38 运行程序(SE38开发)<br>SCAT 计算机测试工具，测试，数据导入等 数据导入<br>（Computer Aided Test Tool）<br>SCC1 集团拷贝<br>SCC4 显示集团<br>SE01 传递传输请求(同一服务器的不同client)<br>SE09 传输请求操作<br>SE10 同SE09<br>SE11 维护ABAP数据字典<br>SE12 显示数据字典<br>SE13|SE14|SE15 数据字典相关<br>SE16|SE17 查看表数据(对建好的数据字典进行数据添加或展示)<br>SE30 ABAP运行分析<br>SE32 ABAP文本元素维护<br>SE35 ABAP&#x2F;4对话框编程维护<br>SE36 维护逻辑数据库<br>SE37 函数据维护Function module<br>SE38 ABAP 编辑器<br>SE39 程序比较<br>SE41 菜单制作器<br>SE43 应用区菜单(相同功能tcode组成一area menu)<br>SE51 屏幕绘制器<br>SE54 生成表的维护视图,然后SE16|SM30可直接维护表数据<br>SE55 生成表维护程序<br>SE61 文档维护<br>SE63 翻译<br>SE71-&gt;SE76 SAPscript相关 Tcode<br>SE71 Form设计 单据打印<br>SE78 Form,SmartForms使用图片上载<br>SE80 ABAP库（对象浏览器）<br>SE81 ABAP应用层次<br>SE84|SE85|SE86 ABAP&#x2F;4 Repository Information System<br>SE90 对象浏览器<br>SE91 建立消息类和消息<br>SE92 维护系统Log消息<br>SE93 给程序维护Tcode<br>SHDB 批输入代码 数据导入<br>SEU Repository Object Browser<br>SHD0 维护Tcode运行变式(Variant)<br>SM04 查看当前用户<br>SM12 删除显示Locked objects(不可删除被lock的传输请求)<br>SM21 Dump log查看<br>SM30|SM31 维护table|view数据<br>SM30 维护表视图<br>SM32 维护表<br>SM35 进程监控，查看Batch input session(建立BDC使用SHDB)<br>SM36 定义后台job<br>SM37 查看后台job<br>SM50 超时用户（Process Overview）<br>SM51 Display system servers, processes, etc.<br>SM62 Display&#x2F;Maintain events in SAP<br>SMARTFORMS SmartForms设计 单据打印<br>SNUM 编号对象维护<br>SO10 标准文本，设定Form使用的TIFF图片等<br>SPAD 假脱机管理<br>SQ01 Query查询制作<br>ST05 SQL等跟踪,使用它可跟踪程序使用的表等.<br>SU20 授权字段 授权<br>SU21 授权对象 授权<br>SU53 检查授权对象,如出现权限问题可使用<br>WE21 IDOC处理中的端口 IDOC</p>
-]]></content>
-      <categories>
-        <category>ABAP</category>
-      </categories>
-      <tags>
-        <tag>ABAP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【ABAP】MM02保存后数据传输至外围系统</title>
-    <url>/2023/02/14/%E3%80%90ABAP%E3%80%91MM02%E4%BF%9D%E5%AD%98%E5%90%8E%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E8%87%B3%E5%A4%96%E5%9B%B4%E7%B3%BB%E7%BB%9F/</url>
-    <content><![CDATA[<p>【问题】MM02更改物料主数据之后，传递最新数据至外围系统。<br>【方案】找到MM02保存后所触发的增强点。<br>【执行】从第一代增强到第四代增强，前三代都没找到合适的增强点，只在第四代增强BTE里面找到一个触发点 00001250</p>
-<span id="more"></span>
-<ol>
-<li><p>运行事务码：FIBF，进入维护事务BTE，选择菜单“环境-&gt;信息系统（P&#x2F;S）（I）-&gt;F8 运行程序<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141338334.png" alt="image-20211020141338334"><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141530432.png" alt="image-20211020141530432"></p>
-</li>
-<li><p>找到业务交易事件【00001250	物料主数据：过帐】，选中后点击模式函数模块<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141736274.png" alt="image-20211020141736274"></p>
-</li>
-<li><p>跳转到函数构建器，将带出的功能模块复制一份（以Z开头），函数组不需要变动<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020142044048.png" alt="image-20211020142044048"></p>
-</li>
-<li><p>进入功能模块，写入你需要实现功能的代码<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020142327875.png" alt="image-20211020142327875"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  CHECK sy-tcode = &#x27;MM02&#x27;.</span><br><span class="line"></span><br><span class="line">  DATA: lt_mara  TYPE mara OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        lt_marc  TYPE marc OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        ls_makt  TYPE makt,</span><br><span class="line">        lt_makt  TYPE makt OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        ls_marm  TYPE marm,</span><br><span class="line">        lt_marm  TYPE marm OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        lt_zmara TYPE zmara OCCURS 0 WITH HEADER LINE.</span><br><span class="line"></span><br><span class="line">  DATA: ls_msgr  TYPE zsha047_msgout.</span><br><span class="line"></span><br><span class="line">  DATA:lt_material TYPE TABLE OF zmaterial_master,</span><br><span class="line">       ls_material TYPE zmaterial_master.</span><br><span class="line"></span><br><span class="line">  APPEND i_mara_new TO lt_mara.</span><br><span class="line">  APPEND i_marc_new TO lt_marc.</span><br><span class="line"></span><br><span class="line">  MOVE-CORRESPONDING t_makt_new TO ls_makt.</span><br><span class="line">  ls_material-maktx = ls_makt-maktx.</span><br><span class="line">  APPEND ls_makt TO lt_makt.</span><br><span class="line"></span><br><span class="line">  MOVE-CORRESPONDING t_marm_new TO ls_marm.</span><br><span class="line">  APPEND ls_marm TO lt_marm.</span><br><span class="line"></span><br><span class="line">  ls_material-matnr = i_mara_new-matnr.</span><br><span class="line">  ls_material-mtart = i_mara_new-mtart.</span><br><span class="line">  ls_material-matkl = i_mara_new-matkl.</span><br><span class="line">  ls_material-meins = i_mara_new-meins.</span><br><span class="line">  ls_material-lvorm = i_mara_new-lvorm.</span><br><span class="line">  ls_material-werks = i_marc_new-werks.</span><br><span class="line">  ls_material-lvorm = i_mara_new-lvorm.</span><br><span class="line">  APPEND ls_material to lt_material.</span><br><span class="line"></span><br><span class="line">*srm物料主数据接收</span><br><span class="line">  CALL FUNCTION &#x27;ZYHG02_IFX001&#x27;</span><br><span class="line">    EXPORTING</span><br><span class="line">      iv_comit = &#x27;X&#x27;</span><br><span class="line">    IMPORTING</span><br><span class="line">      es_msgr  = ls_msgr</span><br><span class="line">    TABLES</span><br><span class="line">      it_mara  = lt_mara</span><br><span class="line">      it_makt  = lt_makt</span><br><span class="line">      it_marc  = lt_marc</span><br><span class="line">      it_marm  = lt_marm</span><br><span class="line">      it_zmara = lt_zmara.</span><br><span class="line"></span><br><span class="line">*wms物料主数据接收</span><br><span class="line">  IF lt_marc IS NOT INITIAL.</span><br><span class="line">    CALL FUNCTION &#x27;ZYHG03_IFX001&#x27;</span><br><span class="line">      EXPORTING</span><br><span class="line">        iv_comit = &#x27;X&#x27;</span><br><span class="line">      IMPORTING</span><br><span class="line">        es_msgr  = ls_msgr</span><br><span class="line">      TABLES</span><br><span class="line">        it_marc  = lt_marc.</span><br><span class="line">  ENDIF.</span><br><span class="line"></span><br><span class="line">*bsp物料数据接收</span><br><span class="line">  IF lt_material IS NOT INITIAL.</span><br><span class="line">    CALL FUNCTION &#x27;ZYHG05_IFX001&#x27;</span><br><span class="line">      EXPORTING</span><br><span class="line">        iv_comit    = &#x27;X&#x27;</span><br><span class="line">      IMPORTING</span><br><span class="line">        es_msgr     = ls_msgr</span><br><span class="line">      TABLES</span><br><span class="line">        lt_material = lt_material.</span><br><span class="line">  ENDIF.</span><br><span class="line"></span><br><span class="line">  clear:ls_msgr,ls_material,ls_makt,ls_marm.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>代码写完之后，还差最后一步，回到FIBF创建产品，设置——产品——一个客户的<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143012675.png" alt="image-20211020143012675"><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143043530.png" alt="image-20211020143043530"></p>
-</li>
-<li><p>配置产品，事件及函数模块，设置——发布&#x2F;订阅模块——一个客户的<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143249158.png" alt="image-20211020143249158"><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143342819.png" alt="image-20211020143342819"></p>
-</li>
-<li><p>最后测试一下，传递数据是否为最新数据。</p>
-</li>
-</ol>
 ]]></content>
       <categories>
         <category>ABAP</category>
