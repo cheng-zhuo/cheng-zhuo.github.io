@@ -86,20 +86,21 @@
 <meta property="og:site_name" content="沉着">
 <meta property="og:description" content="【问题】MM02更改物料主数据之后，传递最新数据至外围系统。【方案】找到MM02保存后所触发的增强点。【执行】从第一代增强到第四代增强，前三代都没找到合适的增强点，只在第四代增强BTE里面找到一个触发点 00001250">
 <meta property="og:locale">
-<meta property="og:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141530432.png">
-<meta property="og:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141736274.png">
-<meta property="og:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020142044048.png">
-<meta property="og:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020142327875.png">
-<meta property="og:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143012675.png">
-<meta property="og:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143043530.png">
-<meta property="og:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143249158.png">
-<meta property="og:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143342819.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020141338334.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020141530432.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020141736274.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020142044048.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020142327875.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020143012675.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020143043530.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020143249158.png">
+<meta property="og:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020143342819.png">
 <meta property="article:published_time" content="2023-02-14T06:24:02.000Z">
-<meta property="article:modified_time" content="2023-02-14T09:08:42.445Z">
+<meta property="article:modified_time" content="2023-02-15T08:23:31.763Z">
 <meta property="article:author" content="chengzhuo">
 <meta property="article:tag" content="ABAP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="c:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141530432.png">
+<meta name="twitter:image" content="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020141338334.png">
 
 
 
@@ -400,19 +401,26 @@
 
 <ol>
 <li><p>运行事务码：FIBF，进入维护事务BTE，选择菜单“环境-&gt;信息系统（P&#x2F;S）（I）-&gt;F8 运行程序 </p>
-<p><a target="_blank" rel="noopener" href="https://postimg.cc/TLDPzd9d">image-20211020141338334.png</a></p>
-<p><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141530432.png" alt="image-20211020141530432"></p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020141338334.png"></p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020141530432.png"></p>
 </li>
-<li><p>找到业务交易事件【00001250	物料主数据：过帐】，选中后点击模式函数模块<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020141736274.png" alt="image-20211020141736274"></p>
+<li><p>找到业务交易事件【00001250	物料主数据：过帐】，选中后点击模式函数模块</p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020141736274.png"></p>
 </li>
-<li><p>跳转到函数构建器，将带出的功能模块复制一份（以Z开头），函数组不需要变动<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020142044048.png" alt="image-20211020142044048"></p>
+<li><p>跳转到函数构建器，将带出的功能模块复制一份（以Z开头），函数组不需要变动</p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020142044048.png"></p>
 </li>
-<li><p>进入功能模块，写入你需要实现功能的代码<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020142327875.png" alt="image-20211020142327875"></p>
+<li><p>进入功能模块，写入你需要实现功能的代码</p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020142327875.png"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">  CHECK sy-tcode = &#x27;MM02&#x27;.</span><br><span class="line"></span><br><span class="line">  DATA: lt_mara  TYPE mara OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        lt_marc  TYPE marc OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        ls_makt  TYPE makt,</span><br><span class="line">        lt_makt  TYPE makt OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        ls_marm  TYPE marm,</span><br><span class="line">        lt_marm  TYPE marm OCCURS 0 WITH HEADER LINE,</span><br><span class="line">        lt_zmara TYPE zmara OCCURS 0 WITH HEADER LINE.</span><br><span class="line"></span><br><span class="line">  DATA: ls_msgr  TYPE zsha047_msgout.</span><br><span class="line"></span><br><span class="line">  DATA:lt_material TYPE TABLE OF zmaterial_master,</span><br><span class="line">       ls_material TYPE zmaterial_master.</span><br><span class="line"></span><br><span class="line">  APPEND i_mara_new TO lt_mara.</span><br><span class="line">  APPEND i_marc_new TO lt_marc.</span><br><span class="line"></span><br><span class="line">  MOVE-CORRESPONDING t_makt_new TO ls_makt.</span><br><span class="line">  ls_material-maktx = ls_makt-maktx.</span><br><span class="line">  APPEND ls_makt TO lt_makt.</span><br><span class="line"></span><br><span class="line">  MOVE-CORRESPONDING t_marm_new TO ls_marm.</span><br><span class="line">  APPEND ls_marm TO lt_marm.</span><br><span class="line"></span><br><span class="line">  ls_material-matnr = i_mara_new-matnr.</span><br><span class="line">  ls_material-mtart = i_mara_new-mtart.</span><br><span class="line">  ls_material-matkl = i_mara_new-matkl.</span><br><span class="line">  ls_material-meins = i_mara_new-meins.</span><br><span class="line">  ls_material-lvorm = i_mara_new-lvorm.</span><br><span class="line">  ls_material-werks = i_marc_new-werks.</span><br><span class="line">  ls_material-lvorm = i_mara_new-lvorm.</span><br><span class="line">  APPEND ls_material to lt_material.</span><br><span class="line"></span><br><span class="line">*srm物料主数据接收</span><br><span class="line">  CALL FUNCTION &#x27;ZYHG02_IFX001&#x27;</span><br><span class="line">    EXPORTING</span><br><span class="line">      iv_comit = &#x27;X&#x27;</span><br><span class="line">    IMPORTING</span><br><span class="line">      es_msgr  = ls_msgr</span><br><span class="line">    TABLES</span><br><span class="line">      it_mara  = lt_mara</span><br><span class="line">      it_makt  = lt_makt</span><br><span class="line">      it_marc  = lt_marc</span><br><span class="line">      it_marm  = lt_marm</span><br><span class="line">      it_zmara = lt_zmara.</span><br><span class="line"></span><br><span class="line">*wms物料主数据接收</span><br><span class="line">  IF lt_marc IS NOT INITIAL.</span><br><span class="line">    CALL FUNCTION &#x27;ZYHG03_IFX001&#x27;</span><br><span class="line">      EXPORTING</span><br><span class="line">        iv_comit = &#x27;X&#x27;</span><br><span class="line">      IMPORTING</span><br><span class="line">        es_msgr  = ls_msgr</span><br><span class="line">      TABLES</span><br><span class="line">        it_marc  = lt_marc.</span><br><span class="line">  ENDIF.</span><br><span class="line"></span><br><span class="line">*bsp物料数据接收</span><br><span class="line">  IF lt_material IS NOT INITIAL.</span><br><span class="line">    CALL FUNCTION &#x27;ZYHG05_IFX001&#x27;</span><br><span class="line">      EXPORTING</span><br><span class="line">        iv_comit    = &#x27;X&#x27;</span><br><span class="line">      IMPORTING</span><br><span class="line">        es_msgr     = ls_msgr</span><br><span class="line">      TABLES</span><br><span class="line">        lt_material = lt_material.</span><br><span class="line">  ENDIF.</span><br><span class="line"></span><br><span class="line">  clear:ls_msgr,ls_material,ls_makt,ls_marm.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 </li>
-<li><p>代码写完之后，还差最后一步，回到FIBF创建产品，设置——产品——一个客户的<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143012675.png" alt="image-20211020143012675"><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143043530.png" alt="image-20211020143043530"></p>
+<li><p>代码写完之后，还差最后一步，回到FIBF创建产品，设置——产品——一个客户的</p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020143012675.png"></p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020143043530.png"></p>
 </li>
-<li><p>配置产品，事件及函数模块，设置——发布&#x2F;订阅模块——一个客户的<img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143249158.png" alt="image-20211020143249158"><img src="C:\Users\it-zyj\AppData\Roaming\Typora\typora-user-images\image-20211020143342819.png" alt="image-20211020143342819"></p>
+<li><p>配置产品，事件及函数模块，设置——发布&#x2F;订阅模块——一个客户的</p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020143249158.png"></p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20211020143342819.png"></p>
 </li>
 <li><p>最后测试一下，传递数据是否为最新数据。</p>
 </li>
