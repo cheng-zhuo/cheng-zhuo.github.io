@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>【ABAP】GUI状态描述修改</title>
+    <url>/2023/02/16/%E3%80%90ABAP%E3%80%91GUI%E7%8A%B6%E6%80%81%E6%8F%8F%E8%BF%B0%E4%BF%AE%E6%94%B9/</url>
+    <content><![CDATA[<p>有时，从一个程序GUI复制给另外一个程序GUI，然而这种方法无法修改GUI的描述；有时定义好了，又想重新更改描述，需要怎么修改呢？下面提供两种方法：</p>
+<h1 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h1><p>选定程序中的任意一个GUI，点击菜单栏，<strong>转到-对象接口</strong>，展开状态，然后在要修改的 GUI STATUS 上点右键，从弹出的上下文菜单里找 “<strong>属性</strong>”，修改短文本内容即可。</p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20220525152640329.png"></p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20220525153008802.png"></p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20220525153827616.png"></p>
+<h1 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h1><p>选定程序中的任意一个GUI，点击菜单栏，<strong>转到-对象列表-状态列表</strong>，图中红色字体修改就完成了。</p>
+<p><img src="https://picgo-cheng.oss-cn-hangzhou.aliyuncs.com/img/image-20220525154119517.png"></p>
+]]></content>
+      <categories>
+        <category>ABAP</category>
+      </categories>
+      <tags>
+        <tag>ABAP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【ABAP】事务码及解释</title>
     <url>/2023/02/14/%E3%80%90ABAP%E3%80%91%E4%BA%8B%E5%8A%A1%E7%A0%81%E5%8F%8A%E8%A7%A3%E9%87%8A-1/</url>
     <content><![CDATA[<table>
